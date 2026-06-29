@@ -1,0 +1,19 @@
+{
+  "id": "countries",
+  "title": "Countries & Languages",
+  "type": "vocab",
+  "fields": ["script", "kana", "romaji", "english"],
+  "prompt": "script",
+  "answer": "english",
+  "items": [
+    { "i": 1, "script": "日本",        "kana": "にほん",          "romaji": ["nihon", "nippon"],  "english": ["Japan"],                          "note": "にほん (nihon) is standard; にっぽん (nippon) is more formal/patriotic — used on coins and in 日本銀行 (Nippon Ginkou = Bank of Japan). The kanji 日 = sun, 本 = origin → 'origin of the sun' = Land of the Rising Sun." },
+    { "i": 2, "script": "日本語",      "kana": "にほんご",        "romaji": ["nihongo"],          "english": ["Japanese (language)"],            "note": "語 (go) = language. Pattern: [country kanji] + 語 = the language. 日本語 (Japanese), 英語 (English), フランス語 (French), 中国語 (Chinese). 「日本語を勉強しています」= I am studying Japanese." },
+    { "i": 3, "script": "日本人",      "kana": "にほんじん",      "romaji": ["nihonjin"],         "english": ["Japanese person", "Japanese people"], "note": "人 (jin/hito) = person. Pattern: [country] + 人 = person from that country. 日本人 (Japanese), イギリス人 (British), フランス人 (French). Plural is the same word: 日本人 can mean one person or many. 「あの人は日本人ですか？」= Is that person Japanese?" },
+    { "i": 4, "script": "イギリス",    "kana": "いぎりす",        "romaji": ["igirisu"],          "english": ["England", "Britain", "the UK"],   "note": "イギリス comes from Portuguese 'inglês' (English) → borrowed into Japanese via early trade. It broadly means the UK/Britain. The formal kanji word is 英国 (eikoku). 英 is the kanji for England/Britain and appears in: 英語 (English language), 英国 (UK), 英雄 (hero — same 英 but different meaning!)." },
+    { "i": 5, "script": "英語",        "kana": "えいご",          "romaji": ["eigo"],             "english": ["English (language)"],             "note": "英 = England/Britain (from 英国, eikoku). 語 = language. 英語 = 'British language' = English. 「英語が話せますか？」= Can you speak English? In Japan, 英語 is a core school subject from age 10. Many signs in tourist areas have 英語 translations." },
+    { "i": 6, "script": "イギリス人",  "kana": "いぎりすじん",    "romaji": ["igirisusjin"],      "english": ["British person", "English person"], "note": "イギリス + 人 (jin) = British/English person. Note: スコットランド人 (Sukottorando-jin) = Scottish person, ウェールズ人 (Wēruzu-jin) = Welsh person — but in casual speech イギリス人 covers all of them. 「私はイギリス人ですか？スコットランド人です！」= Am I British? I'm Scottish!" },
+    { "i": 7, "script": "フランス",    "kana": "ふらんす",        "romaji": ["furansu"],          "english": ["France"],                         "note": "フランス is the katakana transliteration of 'France'. The kanji version 仏国 (fukkoku) exists but is rarely used today — though 仏 (hotoke/butsu) normally means Buddha! This is a fun quirk: 仏 was chosen for its sound 'fu'. 日仏 (Nichi-Futsu) = Japan-France (as in a bilateral summit)." },
+    { "i": 8, "script": "フランス語",  "kana": "ふらんすご",      "romaji": ["furansugo"],        "english": ["French (language)"],              "note": "フランス + 語 (go) = French language. 「フランス語が少し話せます」= I can speak a little French. French is called 仏語 (futsugo) in abbreviated form — again, 仏 from the old kanji for France. 「あなたはフランス語が上手ですね」= Your French is good!" },
+    { "i": 9, "script": "フランス人",  "kana": "ふらんすじん",    "romaji": ["furansujin"],       "english": ["French person"],                  "note": "フランス + 人 (jin) = a French person. フランス人はパンが好きです — French people love bread (a common stereotype in Japan!). In Japan, フランス carries an image of fashion, cuisine, and art: フランス料理 (French cuisine), フランスパン (French bread = baguette)." }
+  ]
+}
