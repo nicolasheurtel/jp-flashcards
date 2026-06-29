@@ -40,6 +40,8 @@ Never leave this file out of sync with the actual code.
 | `/data/phrases-travel.json` | 35 travel phrases: basics, restaurant, directions, shopping, hotel, transport, emergencies |
 | `/data/self-intro.json` | 13 self-introduction sentences (personalised: Nicolas, 28, researcher at U. Edinburgh, quantum computing) |
 | `/data/grammar-n5.json` | 18 grammar patterns (N5 level): particles, verb forms, question/negative/request structures |
+| `/data/time-calendar.json` | 26 items: days of the week (with planet etymology), all 12 months (with cultural events + irregular readings), seasons, time expressions |
+| `/data/weather-seasons.json` | 23 items: 4 seasons + 梅雨 (rainy season), weather words, the 暑い/熱い and 寒い/冷たい distinctions, temperature vocabulary |
 | `/perso/notes.md` | User scratch notes (gitignored) |
 
 ---
@@ -206,6 +208,8 @@ Key classes: `.btn.primary`, `.btn.ghost`, `.btn.big`, `.panel`, `.seg` / `.seg-
 - [x] Grammar patterns N5 (`grammar-n5.json`)
 - [x] Self-introduction sentences, personalised for Nicolas (`self-intro.json`)
 - [ ] Reading stories: short texts built from vocabulary words
+- [x] Time & calendar: days of week (planet etymology), months (cultural events + irregular readings), seasons, time expressions
+- [x] Weather & seasons: 4 seasons + rainy season, weather vocabulary, temperature adjectives with key 暑い/熱い and 寒い/冷たい distinctions
 - [ ] More travel phrases: numbers/prices, food allergies/dietary requests, onsen, temples
 - [ ] N4-level vocabulary and grammar
 
