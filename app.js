@@ -19,7 +19,7 @@ const state = {
   screen: "home",
   config: null,
   run: null, // active session runtime
-  browse: { deckId: "all", query: "", editMode: false },
+  browse: { deckId: "all", query: "", editMode: false, display: "list", allNotesOpen: false },
 };
 
 // ---------- boot ----------
@@ -777,6 +777,16 @@ async function renderBrowse() {
     )
     .join("");
 
+  const hasNotes = b.display === "list" && filtered.some((e) => e.item.note);
+  const notesLabel = b.allNotesOpen ? "Hide notes" : "Show notes";
+  const displayModes = ["list", "grid", "table"];
+  const displayIcons = { list: "≡ List", grid: "⊞ Grid", table: "⊟ Table" };
+
+  let contentHtml;
+  if (b.display === "grid") contentHtml = browseGridHtml(filtered, b.editMode);
+  else if (b.display === "table") contentHtml = browseTableHtml(filtered, b.editMode);
+  else contentHtml = `<div class="browse-list">${filtered.map((e) => browseItemHtml(e, b.editMode, b.allNotesOpen)).join("")}</div>`;
+
   app.innerHTML = `
     <header class="topbar">
       <button class="btn ghost back" data-go="home">‹ Back</button>
@@ -788,18 +798,24 @@ async function renderBrowse() {
         <input type="search" id="browse-search" class="browse-search"
           placeholder="Search…" value="${escapeAttr(b.query)}" />
         <div class="chip-row">${deckChips}</div>
+        <div class="browse-controls">
+          <div class="browse-controls-left">
+            ${hasNotes ? `<button class="chip${b.allNotesOpen ? " on" : ""}" id="toggle-notes">${notesLabel}</button>` : ""}
+          </div>
+          <div class="browse-controls-right">
+            ${displayModes.map((m) => `<button class="chip${b.display === m ? " on" : ""}" data-display="${m}">${displayIcons[m]}</button>`).join("")}
+          </div>
+        </div>
       </div>
       <div class="browse-count">${filtered.length} item${filtered.length !== 1 ? "s" : ""}</div>
-      <div class="browse-list">
-        ${filtered.map((entry) => browseItemHtml(entry, b.editMode)).join("")}
-      </div>
+      ${contentHtml}
     </main>`;
 
   wireGo();
   wireBrowse();
 }
 
-function browseItemHtml({ deck, item, mem }, editMode) {
+function browseItemHtml({ deck, item, mem }, editMode, allNotesOpen = false) {
   const fields = deck.fields;
   const mainField = deck.prompt || fields[0];
   const mainVal = displayField(item, mainField);
@@ -815,7 +831,7 @@ function browseItemHtml({ deck, item, mem }, editMode) {
     : "";
 
   const noteHtml = item.note
-    ? `<details class="browse-note"><summary>Note</summary><span>${escapeHtml(item.note)}</span></details>`
+    ? `<details class="browse-note"${allNotesOpen ? " open" : ""}><summary>Note</summary><span>${escapeHtml(item.note)}</span></details>`
     : "";
 
   const sideHtml = editMode
@@ -855,6 +871,27 @@ function wireBrowse() {
     })
   );
 
+  app.querySelectorAll("[data-display]").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      b.display = btn.dataset.display;
+      renderBrowse();
+    })
+  );
+
+  const notesBtn = app.querySelector("#toggle-notes");
+  if (notesBtn) {
+    notesBtn.addEventListener("click", () => {
+      b.allNotesOpen = !b.allNotesOpen;
+      // Toggle in-place without full re-render
+      app.querySelectorAll(".browse-note").forEach((d) => {
+        if (b.allNotesOpen) d.setAttribute("open", "");
+        else d.removeAttribute("open");
+      });
+      notesBtn.textContent = b.allNotesOpen ? "Hide notes" : "Show notes";
+      notesBtn.classList.toggle("on", b.allNotesOpen);
+    });
+  }
+
   app.querySelector("#toggle-edit").addEventListener("click", () => {
     b.editMode = !b.editMode;
     renderBrowse();
@@ -873,6 +910,70 @@ function wireBrowse() {
       if (badge) badge.textContent = mem.weight;
     });
   });
+}
+
+// Grid view: large glyph tiles — best for kana
+function browseGridHtml(filtered, editMode) {
+  if (!filtered.length) return `<p class="lede">No items.</p>`;
+  return `<div class="browse-grid">
+    ${filtered.map(({ deck, item, mem }) => {
+      const mainField = deck.prompt || deck.fields[0];
+      const mainVal = displayField(item, mainField);
+      const mainCls = promptClass(mainField);
+      // Pick the best subtitle: romaji for kana decks, english for vocab
+      const subField = deck.fields.find((f) => f !== mainField) || null;
+      const subVal = subField ? displayField(item, subField) : "";
+      const weightHtml = editMode
+        ? `<div class="grid-weight">
+            <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="-1">−</button>
+            <span class="weight-badge" data-key="${deck.id}:${item.i}">${mem.weight}</span>
+            <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="1">+</button>
+          </div>`
+        : "";
+      return `<div class="browse-grid-cell">
+        <span class="browse-glyph ${mainCls}">${escapeHtml(mainVal)}</span>
+        ${subVal ? `<span class="browse-grid-sub">${escapeHtml(subVal)}</span>` : ""}
+        ${weightHtml}
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+// Table view: all fields as columns — best for vocab reference
+function browseTableHtml(filtered, editMode) {
+  if (!filtered.length) return `<p class="lede">No items.</p>`;
+  // Collect all unique fields from the visible items (preserve first-seen order)
+  const fieldOrder = [];
+  const fieldSeen = new Set();
+  for (const { deck } of filtered) {
+    for (const f of deck.fields) {
+      if (!fieldSeen.has(f)) { fieldSeen.add(f); fieldOrder.push(f); }
+    }
+  }
+  const weightCol = editMode ? `<th>Weight</th>` : "";
+  return `<div class="browse-table-wrap">
+    <table class="browse-table">
+      <thead>
+        <tr>${fieldOrder.map((f) => `<th>${escapeHtml(fieldName(f))}</th>`).join("")}${weightCol}</tr>
+      </thead>
+      <tbody>
+        ${filtered.map(({ deck, item, mem }) => {
+          const cells = fieldOrder.map((f) => {
+            const v = displayField(item, f);
+            return `<td class="tc-${promptClass(f)}">${escapeHtml(v)}</td>`;
+          }).join("");
+          const weightCell = editMode
+            ? `<td class="tc-weight">
+                <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="-1">−</button>
+                <span class="weight-badge" data-key="${deck.id}:${item.i}">${mem.weight}</span>
+                <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="1">+</button>
+              </td>`
+            : "";
+          return `<tr>${cells}${weightCell}</tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  </div>`;
 }
 
 // ---------- helpers ----------

@@ -3,6 +3,10 @@
 This file is the canonical reference for what exists, how it works, and what is planned.
 It is the first thing Claude should read at the start of any conversation about this project.
 
+**MANDATORY FOR CLAUDE:** Update this file in the same commit as any code change, no exceptions.
+Describe what was added/changed under the relevant section and update the roadmap checkboxes.
+Never leave this file out of sync with the actual code.
+
 ---
 
 ## Stack
@@ -116,7 +120,14 @@ Read-only reference view of all cards. Persists filter state in `state.browse` w
 
 **Item display:** Main glyph/word (large), other fields in a compact line, deck tag on the right. Collapsible note via `<details>`.
 
-**Edit mode** (toggle "Edit" button): Replaces deck tag with weight nudge buttons (− / weight / +). Changes persist immediately to IndexedDB. No full re-render required for weight changes.
+**Controls bar** (below deck chips): Left side has "Show notes / Hide notes" toggle (only visible in List mode when items have notes — toggles all `<details>` in-place without re-rendering). Right side has display mode switcher: List / Grid / Table.
+
+**Display modes** (`state.browse.display`):
+- **List** (default): compact rows, main glyph + other fields in one line, collapsible notes
+- **Grid**: tile grid (`auto-fill`, min 74px cells), large glyph + subtitle below — ideal for kana charts
+- **Table**: scrollable table, one column per field across all visible decks, no notes column
+
+**Edit mode** (toggle "Edit" button in header): Replaces deck tag with weight nudge buttons (− / weight / +) in all three display modes. Changes persist immediately to IndexedDB without full re-render.
 
 ---
 
