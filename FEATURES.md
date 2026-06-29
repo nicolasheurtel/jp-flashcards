@@ -38,10 +38,17 @@ Never leave this file out of sync with the actual code.
 | `/data/verbs-n5.json` | ~40 N5 verbs |
 | `/data/words-common.json` | Shorter common-word deck (subset of N5, not in index.json — kept as draft) |
 | `/data/phrases-travel.json` | 35 travel phrases: basics, restaurant, directions, shopping, hotel, transport, emergencies |
+| `/data/phrases-practical.json` | 20 practical daily items: sunscreen (日焼け止め), umbrella (傘), trash bins (ゴミ箱), reheating food (温め直す), polite water request, preferences (お好み), pharmacy, band-aids, insect repellent, cash/currency exchange, charger, allergy phrases, photo permission, 抜き (without ~), getting lost, restroom, bags, where-to-buy |
 | `/data/self-intro.json` | 13 self-introduction sentences (personalised: Nicolas, 28, researcher at U. Edinburgh, quantum computing) |
 | `/data/grammar-n5.json` | 18 grammar patterns (N5 level): particles, verb forms, question/negative/request structures |
+| `/data/grammar-n4.json` | 22 grammar patterns (N4 level): てから, ながら, てみる, ておく, てしまう, ようになる, ようにする, そうです①②, でしょう, かもしれない, はずです, つもりです, ために, たら, ほうがいい, たことがある, んです, 直す, をいただけますか, てほしい, どちら/どれ |
+| `/data/grammar-n3.json` | 15 grammar patterns (N3 level): ばかり, たばかり, によって, に対して, ことにする, ことになる, わけではない, に違いない, らしい, ようだ/みたいだ, まま, として, ものの, さえ〜ば, ほど〜ない |
 | `/data/time-calendar.json` | 26 items: days of the week (with planet etymology), all 12 months (with cultural events + irregular readings), seasons, time expressions |
 | `/data/weather-seasons.json` | 23 items: 4 seasons + 梅雨 (rainy season), weather words, the 暑い/熱い and 寒い/冷たい distinctions, temperature vocabulary |
+| `/stories/index.json` | Manifest for story files (separate from deck flashcard system) |
+| `/stories/01-nicolas-tokyo.json` | Story 1: Nicolas Arrives in Tokyo (9 paragraphs, 初級) |
+| `/stories/02-restaurant.json` | Story 2: Dinner at a Sushi Restaurant (8 paragraphs, 初級) |
+| `/stories/03-kyoto-spring.json` | Story 3: A Spring Day in Kyoto (9 paragraphs, 初級) |
 | `/perso/notes.md` | User scratch notes (gitignored) |
 
 ---
@@ -78,7 +85,7 @@ Fields marked as "script fields" (`char`, `script`, `kana`) trigger tap-choice m
 `state.screen` drives the router. Screens:
 
 ### `home`
-Landing page. Buttons: Start study → `setup`, Browse & read → `browse`, Past sessions → `history`, Backup & restore → `data`. Shows deck chips (title + count).
+Landing page. Buttons: Start study → `setup`, Browse & read → `browse`, Read stories → `read` (only shown when stories loaded), Past sessions → `history`, Backup & restore → `data`. Shows deck chips (title + count).
 
 ### `setup`
 Configure a study session. Persists in `state.config` across visits (so settings are remembered within a browser tab).
@@ -117,6 +124,11 @@ List of past sessions (most recent first): score %, date/time, correct/answered,
 
 ### `data`
 Backup & restore. Export = JSON download with all memory records + session history. Import = merge (most recent `lastSeen` wins). Reset = wipe all progress.
+
+### `read`
+Reading / stories screen. Two sub-views controlled by `state.readScreen.storyId`:
+- **Story list**: cards for each story (title, Japanese title, level badge, paragraph count, description). Tap to open.
+- **Story view**: flowing text with Japanese paragraphs. Each paragraph uses real Japanese grammar but English words inline for vocabulary the learner doesn't know yet (e.g., "私は sunscreen を買いました"). Tap any paragraph to toggle its English translation. Global "Show EN / Hide EN" button in topbar toggles all translations in-place (no re-render). Vocab chips below each paragraph highlight key words. Stories loaded from `/stories/index.json` + `/stories/*.json` — failure is non-fatal (returns empty array).
 
 ### `browse`
 Read-only reference view of all cards. Persists filter state in `state.browse` within the tab.
@@ -168,6 +180,7 @@ correct: n           ← total correct
 ```js
 state = {
   decks: [],           // loaded deck objects
+  stories: [],         // loaded story objects (from /stories/)
   screen: "home",      // current route
   config: null,        // study session config (persists within tab)
   run: null,           // active session runtime
@@ -175,7 +188,11 @@ state = {
     deckId: "all",     // active deck filter
     query: "",         // search string
     editMode: false,   // weight-edit mode
-  }
+  },
+  readScreen: {
+    storyId: null,     // null = story list; string = individual story view
+    allTr: false,      // global show/hide translations toggle
+  },
 }
 ```
 
@@ -205,16 +222,18 @@ Key classes: `.btn.primary`, `.btn.ghost`, `.btn.big`, `.panel`, `.seg` / `.seg-
 
 ### Content additions (data files)
 - [x] Travel phrases: restaurant, directions, shopping, hotel, transport, emergencies (`phrases-travel.json`)
+- [x] Practical daily phrases: sunscreen, umbrella, trash, reheat food, polite requests, allergy, photography, etc. (`phrases-practical.json`)
 - [x] Grammar patterns N5 (`grammar-n5.json`)
+- [x] Grammar patterns N4 — 22 items (`grammar-n4.json`)
+- [x] Grammar patterns N3 — 15 items (`grammar-n3.json`)
 - [x] Self-introduction sentences, personalised for Nicolas (`self-intro.json`)
-- [ ] Reading stories: short texts built from vocabulary words
+- [x] Reading stories: 3 bilingual stories mixing Japanese grammar with English words for unknown vocabulary (`/stories/`)
 - [x] Time & calendar: days of week (planet etymology), months (cultural events + irregular readings), seasons, time expressions
 - [x] Weather & seasons: 4 seasons + rainy season, weather vocabulary, temperature adjectives with key 暑い/熱い and 寒い/冷たい distinctions
-- [ ] More travel phrases: numbers/prices, food allergies/dietary requests, onsen, temples
-- [ ] N4-level vocabulary and grammar
+- [ ] More travel phrases: numbers/prices, onsen, temples
 
 ### UI / mode additions
-- [ ] "Reading" mode in Browse: pre-written short stories or thematic word lists readable as prose
+- [x] "Read stories" screen: story list + individual story view; tap paragraphs to toggle translation; global Show/Hide EN button
 - [ ] Sentence context for vocab items (click a word → see it in a sentence)
 
 ### Technical

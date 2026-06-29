@@ -1,0 +1,63 @@
+{
+  "id": "story-03",
+  "title": "A Spring Day in Kyoto",
+  "titleJa": "京都の春の一日",
+  "level": "beginner",
+  "description": "Nicolas takes the Shinkansen to Kyoto and explores temples and cherry blossoms.",
+  "paragraphs": [
+    {
+      "i": 1,
+      "ja": "三日目の朝、私は新幹線で京都に行きました。新幹線はとても速くて、comfortable でした。東京から京都まで、約2時間でした。窓の外に富士山が見えました！「富士山だ！！」私は心の中で叫びました。",
+      "en": "On the morning of the third day, I went to Kyoto by Shinkansen. The Shinkansen was very fast and comfortable. From Tokyo to Kyoto took about 2 hours. I could see Mt. Fuji outside the window! 'It's Mt. Fuji!!' I cried inwardly.",
+      "vocab": ["新幹線 (shinkansen) = bullet train", "約〜 (yaku) = approximately", "叫びました (sakebimashita) = cried out / shouted"]
+    },
+    {
+      "i": 2,
+      "ja": "天気は晴れで、暖かかったです。春の京都は beautiful です。今日の plan は三つ：一番目はお寺、二番目は桜、三番目は抹茶！完璧なプランです。",
+      "en": "The weather was clear and warm. Kyoto in spring is beautiful. Today's plan was three things: first, a temple; second, cherry blossoms; third, matcha! A perfect plan.",
+      "vocab": ["晴れ (hare) = clear/sunny weather", "暖かかった (atatakakatta) = was warm (past)", "完璧 (kanpeki) = perfect"]
+    },
+    {
+      "i": 3,
+      "ja": "最初に、金閣寺に行きました。Taxi の中で、「金閣寺に行ってください」と言いました。Driver は「はい、わかりました！外国の方ですか？」「はい、Scotland から来ました。でも、日本語を少し話せます」「上手ですね！」",
+      "en": "First, I went to Kinkakuji (the Golden Pavilion). In the taxi, I said 'Please take me to Kinkakuji.' The driver said 'Yes, understood! Are you a foreigner?' 'Yes, I came from Scotland. But I can speak a little Japanese.' 'You're good at it!'",
+      "vocab": ["金閣寺 (Kinkakuji) = the Golden Pavilion temple", "外国の方 (gaikoku no kata) = person from a foreign country (polite)", "上手 (jouzu) = skilled / good at"]
+    },
+    {
+      "i": 4,
+      "ja": "金閣寺はとても beautiful でした！金色のお寺が緑の木々と池の上に輝いていました。写真を撮ってもいいか確認してから、たくさん撮りました。私のスマホのカメラは大忙しでした！",
+      "en": "Kinkakuji was incredibly beautiful! The golden temple shone among the green trees and over a pond. After confirming it was ok to take photos, I took lots. My phone camera was very busy!",
+      "vocab": ["金色 (kin-iro) = golden coloured", "池 (ike) = pond", "輝いていました (kagayaite imashita) = was shining / gleaming"]
+    },
+    {
+      "i": 5,
+      "ja": "次に、桜を見に公園に行きました。四月の初めで、桜は満開でした！ピンクと白の花がどこにでもありました。空気の中に甘い香りがしました。まるで dream の中みたいでした。",
+      "en": "Next, I went to a park to see the cherry blossoms. It was early April and the cherry blossoms were in full bloom! Pink and white flowers were everywhere. There was a sweet fragrance in the air. It was like being inside a dream.",
+      "vocab": ["満開 (mankai) = full bloom", "香り (kaori) = fragrance / scent", "まるで〜みたい = just like ~ / as if ~"]
+    },
+    {
+      "i": 6,
+      "ja": "公園ではお花見をしている人たちがたくさんいました。家族、友達、会社の人たち... みんなシートを敷いてお弁当を食べていました。子供たちが走り回っていました。とても peaceful な雰囲気でした。私も一人でおにぎりを食べました。桜の下で食べるおにぎりは最高です！",
+      "en": "In the park there were lots of people doing hanami (cherry blossom viewing). Families, friends, work colleagues... everyone had spread out sheets and were eating lunch boxes. Children were running around. It was a very peaceful atmosphere. I also ate onigiri alone. Eating onigiri under the cherry blossoms is the best!",
+      "vocab": ["お花見 (ohanami) = cherry blossom viewing (lit. 'flower-watching')", "お弁当 (obentou) = lunch box", "雰囲気 (fun'iki) = atmosphere / vibe"]
+    },
+    {
+      "i": 7,
+      "ja": "午後、私は抹茶の tea house に行きました。「抹茶と和菓子をください」と言いました。座って、静かな garden を見ながら、ゆっくりお茶を飲みました。抹茶は少し bitter でしたが、和菓子は sweet でした。このバランスが perfect でした！これが本当の日本文化ですね。",
+      "en": "In the afternoon, I went to a matcha tea house. 'Please give me matcha and Japanese sweets,' I said. I sat down and slowly drank tea while looking at a quiet garden. The matcha was a little bitter, but the Japanese sweets were sweet. This balance was perfect! This is true Japanese culture.",
+      "vocab": ["和菓子 (wagashi) = traditional Japanese confectionery", "午後 (gogo) = afternoon", "〜ながら = while doing ~ (simultaneously)"]
+    },
+    {
+      "i": 8,
+      "ja": "夕方、京都の街を少し歩きました。古い木造の建物が並んでいる通りを見つけました。祇園 (Gion) という場所です。一人の maiko さんを見ました！本当に beautiful でした。声をかけたかったですが、忙しそうだったので、やめました。",
+      "en": "In the evening, I walked around Kyoto a little. I found a street lined with old wooden buildings. It's a place called Gion. I saw a maiko (apprentice geisha)! She was truly beautiful. I wanted to call out to her, but she seemed busy so I held back.",
+      "vocab": ["木造 (mokuzou) = wooden (construction)", "祇園 (Gion) = famous historic district in Kyoto", "舞妓 (maiko) = apprentice geisha"]
+    },
+    {
+      "i": 9,
+      "ja": "ホテルに帰る前に、居酒屋で夕ご飯を食べました。「生ビールをください！」最高でした。今日はとても楽しかったです。京都は beautiful な city です。また来たいです。いや、絶対にまた来ます！",
+      "en": "Before returning to the hotel, I had dinner at an izakaya. 'A draft beer please!' It was the best. Today was very enjoyable. Kyoto is a beautiful city. I want to come again. No — I will definitely come again!",
+      "vocab": ["居酒屋 (izakaya) = Japanese pub / bar-restaurant", "生ビール (nama biiru) = draft beer", "楽しかった (tanoshikatta) = was enjoyable / fun"]
+    }
+  ]
+}

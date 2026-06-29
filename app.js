@@ -1,6 +1,6 @@
 // app.js — UI, study loop, sampling engine, grading, session tracking.
 
-import { loadDecks, isScriptField, answersFor } from "./data.js";
+import { loadDecks, loadStories, isScriptField, answersFor } from "./data.js";
 import {
   Memory,
   Sessions,
@@ -16,10 +16,12 @@ const MAX_WEIGHT = 100;
 const app = document.getElementById("app");
 const state = {
   decks: [],
+  stories: [],
   screen: "home",
   config: null,
   run: null, // active session runtime
   browse: { deckId: "all", query: "", editMode: false, display: "list", allNotesOpen: false },
+  readScreen: { storyId: null, allTr: false },
 };
 
 // ---------- boot ----------
@@ -44,6 +46,8 @@ async function init() {
     );
     return;
   }
+  // Story loading is non-fatal: fails gracefully → []
+  state.stories = await loadStories();
   render();
 }
 
@@ -56,6 +60,7 @@ function render() {
   if (state.screen === "history") return renderHistory();
   if (state.screen === "data") return renderData();
   if (state.screen === "browse") return renderBrowse();
+  if (state.screen === "read") return renderRead();
 }
 
 function go(screen) {
@@ -76,6 +81,7 @@ function renderHome() {
         Everything runs offline once loaded.</p>
       <button class="btn primary big" data-go="setup">Start study</button>
       <button class="btn big" data-go="browse">Browse &amp; read</button>
+      ${state.stories.length ? `<button class="btn big" data-go="read">Read stories</button>` : ""}
       <div class="deck-summary">
         ${state.decks
           .map(
@@ -975,6 +981,109 @@ function browseTableHtml(filtered, editMode) {
       </tbody>
     </table>
   </div>`;
+}
+
+// ---------- reading (stories) ----------
+function renderRead() {
+  const b = state.readScreen;
+
+  if (b.storyId) {
+    const story = state.stories.find((s) => s.id === b.storyId);
+    if (story) return renderStory(story);
+    b.storyId = null;
+  }
+
+  app.innerHTML = `
+    <header class="topbar">
+      <button class="btn ghost back" data-go="home">‹ Back</button>
+      <h1>Stories</h1>
+    </header>
+    <main class="stack">
+      ${state.stories.length
+        ? state.stories.map(storyCard).join("")
+        : `<p class="lede">No stories available.</p>`}
+    </main>`;
+
+  wireGo();
+  app.querySelectorAll("[data-story]").forEach((el) =>
+    el.addEventListener("click", () => {
+      b.storyId = el.dataset.story;
+      b.allTr = false;
+      window.scrollTo(0, 0);
+      renderRead();
+    })
+  );
+}
+
+function renderStory(story) {
+  const b = state.readScreen;
+  const paraCount = (story.paragraphs || []).length;
+
+  app.innerHTML = `
+    <header class="topbar">
+      <button class="btn ghost" id="back-stories">‹ Stories</button>
+      <h1 class="story-topbar-title">${escapeHtml(story.title)}</h1>
+      <button class="btn ghost${b.allTr ? " edit-active" : ""}" id="toggle-tr">
+        ${b.allTr ? "Hide EN" : "Show EN"}
+      </button>
+    </header>
+    <main class="stack">
+      <p class="story-meta">${escapeHtml(story.titleJa)} · ${levelLabel(story.level)} · ${paraCount} paragraphs</p>
+      ${story.description ? `<p class="story-desc-page">${escapeHtml(story.description)}</p>` : ""}
+      <div class="story-paragraphs">
+        ${(story.paragraphs || []).map((p) => storyParagraph(p, b.allTr)).join("")}
+      </div>
+    </main>`;
+
+  app.querySelector("#back-stories").addEventListener("click", () => {
+    b.storyId = null;
+    window.scrollTo(0, 0);
+    renderRead();
+  });
+
+  app.querySelector("#toggle-tr").addEventListener("click", () => {
+    b.allTr = !b.allTr;
+    const btn = app.querySelector("#toggle-tr");
+    btn.textContent = b.allTr ? "Hide EN" : "Show EN";
+    btn.classList.toggle("edit-active", b.allTr);
+    app.querySelectorAll(".story-tr").forEach((el) => { el.hidden = !b.allTr; });
+  });
+
+  app.querySelectorAll(".story-para").forEach((para) => {
+    para.addEventListener("click", () => {
+      const tr = para.querySelector(".story-tr");
+      if (tr) tr.hidden = !tr.hidden;
+    });
+  });
+}
+
+function storyCard(story) {
+  const paraCount = (story.paragraphs || []).length;
+  return `
+    <div class="panel story-card" data-story="${escapeAttr(story.id)}" role="button" tabindex="0">
+      <div class="story-card-header">
+        <span class="story-card-title">${escapeHtml(story.title)}</span>
+        <span class="story-level-badge">${escapeHtml(levelLabel(story.level))}</span>
+      </div>
+      <div class="story-card-sub">${escapeHtml(story.titleJa)} · ${paraCount} paragraphs</div>
+      ${story.description ? `<p class="story-card-desc">${escapeHtml(story.description)}</p>` : ""}
+    </div>`;
+}
+
+function storyParagraph(p, allTr) {
+  const vocabHtml = p.vocab && p.vocab.length
+    ? `<div class="story-vocab">${p.vocab.map((v) => `<span class="story-vocab-item">${escapeHtml(v)}</span>`).join("")}</div>`
+    : "";
+  return `
+    <div class="story-para" title="Tap to show/hide translation">
+      <p class="story-ja">${escapeHtml(p.ja)}</p>
+      <p class="story-tr"${allTr ? "" : " hidden"}>${escapeHtml(p.en)}</p>
+      ${vocabHtml}
+    </div>`;
+}
+
+function levelLabel(level) {
+  return { beginner: "初級", intermediate: "中級", advanced: "上級" }[level] || (level || "");
 }
 
 // ---------- helpers ----------

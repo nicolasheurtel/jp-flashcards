@@ -1,0 +1,63 @@
+{
+  "id": "story-01",
+  "title": "Nicolas in Tokyo",
+  "titleJa": "東京のニコラ",
+  "level": "beginner",
+  "description": "Nicolas arrives in Japan for the very first time. Can he find his hotel?",
+  "paragraphs": [
+    {
+      "i": 1,
+      "ja": "私の名前はニコラです。私は Scotland に住んでいます。エジンバラ大学で researcher です。Quantum computing を研究しています。日本語を少し勉強しました — さあ、使ってみましょう！",
+      "en": "My name is Nicolas. I live in Scotland. I am a researcher at the University of Edinburgh. I research quantum computing. I studied a little Japanese — let's try using it now!",
+      "vocab": ["大学 (daigaku) = university", "研究しています (kenkyuu shite imasu) = researching", "さあ = well then / come on"]
+    },
+    {
+      "i": 2,
+      "ja": "先週、私は初めて日本に来ました！Tokyo の airport はとても大きかったです。飛行機の中で「日本語の練習」をしました。「すみません」と「ありがとうございます」と「おいしい」— これだけは覚えました。",
+      "en": "Last week, I came to Japan for the first time! Tokyo's airport was very large. On the plane I 'practised Japanese'. 'Excuse me' and 'thank you' and 'delicious' — I memorised at least these.",
+      "vocab": ["先週 (senshuu) = last week", "初めて (hajimete) = for the first time", "覚えました (oboemas hita) = memorised"]
+    },
+    {
+      "i": 3,
+      "ja": "Customs で、officer が「パスポートをお見せください」と言いました。私はパスポートを出しました。「日本へようこそ！」Officer はほほえみました。とても kind でした。よかった！",
+      "en": "At customs, an officer said 'Please show your passport.' I took out my passport. 'Welcome to Japan!' The officer smiled. They were very kind. What a relief!",
+      "vocab": ["ようこそ (youkoso) = welcome", "ほほえみました (hohoemimashita) = smiled", "よかった (yokatta) = what a relief / I'm glad"]
+    },
+    {
+      "i": 4,
+      "ja": "次に、新宿のホテルに行きたかったです。電車の station を探しました。「すみません、電車はどこですか？」と聞きました。「あそこです！」と人が優しく言いました。日本人はとても helpful です！",
+      "en": "Next, I wanted to go to my hotel in Shinjuku. I looked for the train station. 'Excuse me, where is the train?' I asked. 'Over there!' a person said kindly. Japanese people are very helpful!",
+      "vocab": ["次に (tsugini) = next", "あそこ (asoko) = over there", "優しく (yasashiku) = kindly / gently"]
+    },
+    {
+      "i": 5,
+      "ja": "電車はとてもきれいで、quiet でした。私の seat は comfortable でした。窓から東京の tall buildings が見えました。エジンバラとは全然違います！すごいですね。",
+      "en": "The train was very clean and quiet. My seat was comfortable. From the window I could see Tokyo's tall buildings. It's completely different from Edinburgh! Amazing.",
+      "vocab": ["窓 (mado) = window", "見えました (miemashita) = could see", "全然違います (zenzen chigaimasu) = completely different"]
+    },
+    {
+      "i": 6,
+      "ja": "ホテルに着きました！「予約があります。ニコラです」と私は言いました。「はい、ニコラ様。お部屋は7階です。どうぞ」Staff はとても polite でした。様 (さま) はとても formal な言葉です。私は scientist で、王様ではありません！でも嬉しかったです。",
+      "en": "I arrived at the hotel! 'I have a reservation. I am Nicolas,' I said. 'Yes, Mr Nicolas. Your room is on the 7th floor. Here you go.' The staff was very polite. Sama is a very formal word. I am a scientist, not a king! But I was happy.",
+      "vocab": ["〜様 (sama) = very formal honorific (Mr/Ms/Your Highness)", "7階 (nana-kai) = 7th floor", "王様 (ousama) = king"]
+    },
+    {
+      "i": 7,
+      "ja": "部屋は small でしたが、とてもきれいでした。窓から東京の夜景が見えました。美しかったです！エジンバラも beautiful ですが、Tokyo の夜はまた別の美しさがありました。",
+      "en": "The room was small, but very clean. From the window I could see Tokyo's night view. It was beautiful! Edinburgh is beautiful too, but Tokyo at night had a different kind of beauty.",
+      "vocab": ["夜景 (yakei) = night view", "また別の (mata betsu no) = a different kind of"]
+    },
+    {
+      "i": 8,
+      "ja": "お腹が空きました！近くのコンビニに行きました。コンビニは24時間開いています — Scotland にはない！おにぎりと お茶を買いました。レジで「温めますか？」と聞かれました。「はい、お願いします！」おにぎりは salmon と plum がありました。両方おいしかったです！",
+      "en": "I got hungry! I went to a nearby convenience store. Convenience stores are open 24 hours — you don't have that in Scotland! I bought onigiri and green tea. At the register they asked 'Shall I heat it up?' 'Yes please!' There were salmon and plum onigiri. Both were delicious!",
+      "vocab": ["お腹が空きました (onaka ga sukimashita) = got hungry", "両方 (ryouhou) = both", "〜時間 (jikan) = hours"]
+    },
+    {
+      "i": 9,
+      "ja": "今日はとても疲れましたが、とても happy です！明日、もっと東京を explore するつもりです。「おやすみなさい、東京！」",
+      "en": "Today I was very tired, but very happy! Tomorrow I plan to explore more of Tokyo. 'Good night, Tokyo!'",
+      "vocab": ["おやすみなさい (oyasuminasai) = good night", "疲れました (tsukaremashita) = got tired", "〜つもりです = I plan to ~"]
+    }
+  ]
+}

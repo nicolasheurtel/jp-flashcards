@@ -1,0 +1,57 @@
+{
+  "id": "story-02",
+  "title": "Dinner at a Sushi Restaurant",
+  "titleJa": "お寿司屋さんで",
+  "level": "beginner",
+  "description": "Nicolas goes for sushi on his second evening in Tokyo. His Japanese is put to the test!",
+  "paragraphs": [
+    {
+      "i": 1,
+      "ja": "二日目の夜、私は sushi restaurant に行きました。外に line がありました。「人気があるな！」と思いました。30分くらい待って、やっと入れました。",
+      "en": "On the evening of the second day, I went to a sushi restaurant. There was a line outside. 'It must be popular!' I thought. I waited about 30 minutes and finally got in.",
+      "vocab": ["二日目 (futsuka-me) = second day", "人気がある (ninki ga aru) = to be popular", "やっと = finally / at last"]
+    },
+    {
+      "i": 2,
+      "ja": "「いらっしゃいませ！何名様ですか？」と staff が言いました。「一人です」と私は答えました。私は counter seat に案内されました。目の前に chef がいました — 本物の sushi chef です！",
+      "en": "\"Welcome! How many people?\" the staff said. \"Just me,\" I answered. I was guided to a counter seat. Right in front of me was the chef — a real sushi chef!",
+      "vocab": ["いらっしゃいませ (irasshaimase) = welcome (to customers)", "何名様 (nan-mei-sama) = how many people (polite)", "案内されました (annai saremashita) = was guided to"]
+    },
+    {
+      "i": 3,
+      "ja": "Chef はとても friendly でした。「初めての日本ですか？」と聞きました。「はい！でも、日本語を少し話せます」と私は言いました。Chef は「本当ですか？すごいですね！」と喜んでくれました。",
+      "en": "The chef was very friendly. 'Is this your first time in Japan?' he asked. 'Yes! But I can speak a little Japanese,' I said. The chef was delighted: 'Really? That's impressive!'",
+      "vocab": ["本当ですか (hontou desu ka) = really? / is that so?", "喜んでくれました (yorokonde kuremashita) = was delighted (for me)"]
+    },
+    {
+      "i": 4,
+      "ja": "メニューを見ました。漢字が多くて、少し難しかったです。でも、写真があってよかった！「おすすめは何ですか？」と聞きました。Chef は「今日は salmon と tuna が新鮮です！ぜひ食べてみてください」と言いました。",
+      "en": "I looked at the menu. There were lots of kanji, it was a little difficult. But luckily there were photos! 'What do you recommend?' I asked. The chef said 'Today the salmon and tuna are fresh! Please do try them.'",
+      "vocab": ["おすすめ (osusume) = recommendation", "新鮮 (shinsen) = fresh", "ぜひ (zehi) = by all means / please do"]
+    },
+    {
+      "i": 5,
+      "ja": "「いただきます！」最初の一貫を食べました。Oh my goodness... とてもおいしかったです！これは Scotland では絶対に食べられないです。私は次々と食べました。握り、手巻き、玉子... 全部最高でした！",
+      "en": "\"Itadakimasu!\" I ate the first piece. Oh my goodness... it was incredibly delicious! You absolutely cannot eat this in Scotland. I ate one after another. Nigiri, temaki, tamagoyaki... everything was outstanding!",
+      "vocab": ["いただきます = ritual phrase before eating ('I humbly receive')", "次々と (tsugitsugi to) = one after another", "絶対に (zettai ni) = absolutely / definitely"]
+    },
+    {
+      "i": 6,
+      "ja": "お茶も飲みました。Japanese green tea は少し bitter ですが、寿司と一緒に食べると perfect です。「おすすめの dessert はありますか？」と聞きました。「抹茶 ice cream がありますよ！」「じゃあ、それをください！」",
+      "en": "I also drank tea. Japanese green tea is a little bitter, but it's perfect when eaten with sushi. 'Is there a recommended dessert?' I asked. 'We have matcha ice cream!' 'Then I'll have that please!'",
+      "vocab": ["抹茶 (matcha) = powdered green tea", "じゃあ (jaa) = then / well then", "〜と一緒に (to issho ni) = together with ~"]
+    },
+    {
+      "i": 7,
+      "ja": "全部食べた後で、「ごちそうさまでした！本当においしかったです！」と私は言いました。Chef はとても嬉しそうでした。「ありがとうございます！また来てください！」「絶対に来ます！」",
+      "en": "After eating everything, I said 'Thank you for the wonderful meal! It was truly delicious!' The chef looked very happy. 'Thank you very much! Please come again!' 'I will absolutely come back!'",
+      "vocab": ["ごちそうさまでした = ritual phrase after eating ('it was a feast')", "嬉しそう (ureshisou) = looks happy", "また (mata) = again"]
+    },
+    {
+      "i": 8,
+      "ja": "レジで「お会計をお願いします」と言いました。4,800円でした。少し高いですが、worth it でした！帰りの電車の中で思いました：「日本の寿司は世界一です。」",
+      "en": "At the register I said 'The bill please.' It was 4,800 yen. A little expensive, but worth it! On the train home I thought: 'Japanese sushi is the best in the world.'",
+      "vocab": ["お会計 (okaikei) = the bill (polite)", "世界一 (sekai-ichi) = number one in the world"]
+    }
+  ]
+}

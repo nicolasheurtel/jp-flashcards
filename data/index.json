@@ -5,8 +5,11 @@
     "words-n5.json",
     "verbs-n5.json",
     "phrases-travel.json",
+    "phrases-practical.json",
     "self-intro.json",
     "grammar-n5.json",
+    "grammar-n4.json",
+    "grammar-n3.json",
     "time-calendar.json",
     "weather-seasons.json"
   ]

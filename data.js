@@ -32,6 +32,24 @@ function validateDeck(deck, file) {
     throw new Error(`${file}: "items" is empty`);
 }
 
+export async function loadStories() {
+  try {
+    const manifest = await fetchJSON("./stories/index.json");
+    const files = manifest.stories || [];
+    const stories = [];
+    for (const file of files) {
+      try {
+        stories.push(await fetchJSON(`./stories/${file}`));
+      } catch (e) {
+        console.error(`Story load error "${file}":`, e);
+      }
+    }
+    return stories;
+  } catch {
+    return [];
+  }
+}
+
 // Is this field a Japanese script field (answered by tapping, not typing)?
 export function isScriptField(field) {
   return field === "char" || field === "script" || field === "kana";
