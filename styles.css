@@ -91,6 +91,26 @@ body {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
+.progress-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.progress-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+}
+.dir-tag {
+  font-size: 0.66rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  line-height: 1;
+}
 .score {
   font-variant-numeric: tabular-nums;
   font-weight: 700;

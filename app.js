@@ -403,7 +403,7 @@ async function nudge(dir) {
   const run = state.run;
   if (!run.card) return;
   const mem = run.card.mem;
-  mem.weight = clamp(mem.weight + dir * NUDGE, MIN_WEIGHT, MAX_WEIGHT);
+  mem.weight = clamp(mem.weight + dir * NUDGE, 0, MAX_WEIGHT);
   await Memory.put(mem);
   const out = app.querySelector(".weight-out");
   if (out) out.textContent = mem.weight;
@@ -445,7 +445,10 @@ function renderStudy() {
   app.innerHTML = `
     <header class="topbar study">
       <button class="btn ghost back" id="quit">End</button>
-      <div class="progress"><span>${progress}</span></div>
+      <div class="progress-wrap">
+        <span class="progress-count">${progress}</span>
+        <span class="dir-tag">${dirLabel(run.card)}</span>
+      </div>
       <div class="score">${run.correct}<span>○</span></div>
     </header>
     <main class="study-stage">${body}</main>`;
@@ -464,7 +467,6 @@ function promptBody(run, card) {
     return `
       <div class="card">
         ${frontHtml}
-        <div class="dir">${dirLabel(card)}</div>
       </div>
       <div class="actions" id="quick-reveal">
         <button class="btn primary big" id="reveal">Show answer</button>
@@ -477,7 +479,6 @@ function promptBody(run, card) {
     return `
       <div class="card">
         ${frontHtml}
-        <div class="dir">${dirLabel(card)}</div>
       </div>
       <div class="choices">
         ${opts
@@ -904,7 +905,7 @@ function wireBrowse() {
       const [deckId, iStr] = key.split(":");
       const i = Number(iStr);
       const mem = (await Memory.get(deckId, i)) || defaultMemory(deckId, i);
-      mem.weight = clamp(mem.weight + Number(btn.dataset.nudge) * NUDGE, MIN_WEIGHT, MAX_WEIGHT);
+      mem.weight = clamp(mem.weight + Number(btn.dataset.nudge) * NUDGE, 0, MAX_WEIGHT);
       await Memory.put(mem);
       const badge = app.querySelector(`.weight-badge[data-key="${key}"]`);
       if (badge) badge.textContent = mem.weight;

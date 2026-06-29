@@ -36,7 +36,10 @@ Never leave this file out of sync with the actual code.
 | `/data/katakana.json` | 46 katakana characters |
 | `/data/words-n5.json` | ~80 N5 vocabulary words |
 | `/data/verbs-n5.json` | ~40 N5 verbs |
-| `/data/words-common.json` | Shorter common-word deck (subset of N5, not in index.json yet) |
+| `/data/words-common.json` | Shorter common-word deck (subset of N5, not in index.json — kept as draft) |
+| `/data/phrases-travel.json` | 35 travel phrases: basics, restaurant, directions, shopping, hotel, transport, emergencies |
+| `/data/self-intro.json` | 13 self-introduction sentences (personalised: Nicolas, 28, researcher at U. Edinburgh, quantum computing) |
+| `/data/grammar-n5.json` | 18 grammar patterns (N5 level): particles, verb forms, question/negative/request structures |
 | `/perso/notes.md` | User scratch notes (gitignored) |
 
 ---
@@ -92,7 +95,7 @@ Configure a study session. Persists in `state.config` across visits (so settings
 **Length panel:** 10 / 20 / 40 / Endless.
 
 ### `study`
-Active study loop. Header shows progress (answered/total) and correct count.
+Active study loop. Header shows progress (answered/total) and — on a second line below the counter — the direction label (e.g. "kanji + romaji → English"). This keeps the label out of the card face so the content is easier to read.
 
 **Phases per card:**
 1. `prompt` — shows front fields; in Quick mode: "Show answer" button; in Write mode: type field or tap choice grid
@@ -150,10 +153,11 @@ correct: n           ← total correct
 `w = (deckFrequency/100) × (itemWeight/100)`. Soft anti-repeat: if the same card was just shown, its weight is multiplied by 0.15.
 
 ### Grading effect on weight
-- Correct: `weight -= 12` (floors at 5), streak++, interval grows SM-2 style
+- Correct: `weight -= 12` (floors at MIN_WEIGHT=5 for auto-grading), streak++, interval grows SM-2 style
 - Wrong: `weight += 12` (caps at 100), streak=0, interval resets to 0
-- Manual tune (study screen): ±12 per click
-- Manual tune (browse edit mode): ±12 per click
+- Manual tune (study screen): ±12 per click, **minimum 0** (card vanishes from rotation)
+- Manual tune (browse edit mode): ±12 per click, **minimum 0** (card vanishes from rotation)
+- Setting weight to 0 permanently excludes a card from study until manually raised again in Browse
 
 ---
 
@@ -198,17 +202,19 @@ Key classes: `.btn.primary`, `.btn.ghost`, `.btn.big`, `.panel`, `.seg` / `.seg-
 ## Planned / not yet built
 
 ### Content additions (data files)
-- [ ] Expressions by context: hotel, restaurant, asking directions, shopping
-- [ ] Grammar rules deck (new deck type, possibly with examples)
-- [ ] Self-introduction sentences (user to provide personal info)
-- [ ] Reading stories generated from vocabulary (short texts)
+- [x] Travel phrases: restaurant, directions, shopping, hotel, transport, emergencies (`phrases-travel.json`)
+- [x] Grammar patterns N5 (`grammar-n5.json`)
+- [x] Self-introduction sentences, personalised for Nicolas (`self-intro.json`)
+- [ ] Reading stories: short texts built from vocabulary words
+- [ ] More travel phrases: numbers/prices, food allergies/dietary requests, onsen, temples
+- [ ] N4-level vocabulary and grammar
 
 ### UI / mode additions
-- [ ] "Reading" mode in Browse: display pre-written short stories or all vocabulary listed as readable sentences
-- [ ] Possibly: story generation from vocabulary items in a deck
+- [ ] "Reading" mode in Browse: pre-written short stories or thematic word lists readable as prose
+- [ ] Sentence context for vocab items (click a word → see it in a sentence)
 
 ### Technical
-- [ ] `words-common.json` is not yet in `data/index.json` (duplicate of N5 subset — decide to merge or drop)
+- [ ] `words-common.json` not in `data/index.json` — decide to merge with words-n5 or drop
 
 ---
 

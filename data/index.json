@@ -3,6 +3,9 @@
     "hiragana.json",
     "katakana.json",
     "words-n5.json",
-    "verbs-n5.json"
+    "verbs-n5.json",
+    "phrases-travel.json",
+    "self-intro.json",
+    "grammar-n5.json"
   ]
 }
