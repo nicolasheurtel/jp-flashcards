@@ -541,6 +541,183 @@ input[type="range"] {
   padding: 12px 16px;
 }
 
+/* ---- direction pickers (setup) ---- */
+.dir-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.dir-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding-top: 13px;
+  min-width: 54px;
+  flex-shrink: 0;
+}
+.dir-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+.dir-picks .seg-btn {
+  flex: 0 0 auto;
+  min-width: 60px;
+  padding: 10px 12px;
+}
+
+/* ---- secondary (sub) fields in the study card ---- */
+.prompt.sub {
+  font-size: 1.5rem !important;
+  color: var(--muted);
+  font-weight: 500;
+  padding-top: 4px;
+}
+.reveal-answer.sub {
+  font-size: 1.2rem !important;
+  color: var(--muted);
+  font-weight: 500;
+  border-top: none;
+  padding-top: 4px;
+}
+
+/* ---- browse & read screen ---- */
+.browse-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.browse-search {
+  font: inherit;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  width: 100%;
+  color: var(--ink);
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.12s ease;
+}
+.chip.on {
+  background: var(--indigo);
+  border-color: var(--indigo-deep);
+  color: #fff;
+}
+.browse-count {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.browse-list {
+  display: flex;
+  flex-direction: column;
+}
+.browse-item {
+  border-top: 1px solid var(--line);
+  padding: 10px 0;
+}
+.browse-item:first-child {
+  border-top: none;
+}
+.browse-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.browse-glyph {
+  font-family: var(--jp);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.browse-glyph.glyph {
+  font-size: 2rem;
+  min-width: 2.4rem;
+  text-align: center;
+}
+.browse-glyph.word {
+  font-size: 1.2rem;
+}
+.browse-glyph.en {
+  font-family: var(--sans);
+  font-size: 1rem;
+}
+.browse-info {
+  flex: 1;
+  min-width: 0;
+}
+.browse-rest {
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-family: var(--jp);
+  word-break: break-word;
+}
+.browse-deck-tag {
+  font-size: 0.72rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.browse-weight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.weight-badge {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--indigo);
+  min-width: 24px;
+  text-align: center;
+  font-size: 0.82rem;
+}
+.browse-note {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.browse-note summary {
+  cursor: pointer;
+  color: var(--indigo);
+  font-weight: 600;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  list-style: none;
+}
+.browse-note summary::before {
+  content: "▸ ";
+}
+details[open] .browse-note summary::before {
+  content: "▾ ";
+}
+.btn.edit-active {
+  color: var(--shu);
+}
+
 /* focus + motion */
 :focus-visible {
   outline: 3px solid var(--shu);

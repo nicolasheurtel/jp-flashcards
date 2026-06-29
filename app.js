@@ -19,6 +19,7 @@ const state = {
   screen: "home",
   config: null,
   run: null, // active session runtime
+  browse: { deckId: "all", query: "", editMode: false },
 };
 
 // ---------- boot ----------
@@ -54,6 +55,7 @@ function render() {
   if (state.screen === "summary") return renderSummary();
   if (state.screen === "history") return renderHistory();
   if (state.screen === "data") return renderData();
+  if (state.screen === "browse") return renderBrowse();
 }
 
 function go(screen) {
@@ -73,6 +75,7 @@ function renderHome() {
       <p class="lede">Pick what to study, set how often each set shows up, and go.
         Everything runs offline once loaded.</p>
       <button class="btn primary big" data-go="setup">Start study</button>
+      <button class="btn big" data-go="browse">Browse &amp; read</button>
       <div class="deck-summary">
         ${state.decks
           .map(
@@ -98,7 +101,6 @@ function renderSetup() {
   const commonFields = intersectFields(
     state.decks.filter((d) => c.decks[d.id].enabled)
   );
-  // keep front/back valid against the current selection
   ensureDirectionValid(c, commonFields);
 
   app.innerHTML = `
@@ -116,15 +118,26 @@ function renderSetup() {
 
       <section class="panel">
         <h2>Direction</h2>
-        <div class="field">
-          <label>Show</label>
-          <select id="front">${fieldOptions(commonFields, c.front)}</select>
+        <p class="hint">Select one or more fields to show, and one or more to answer with.</p>
+        <div class="dir-group">
+          <span class="dir-label">Show</span>
+          <div class="dir-picks">
+            ${commonFields.map(f => `
+              <button class="seg-btn dir-pick ${c.front.includes(f) ? 'on' : ''}"
+                      data-field="${f}" data-side="front">${fieldName(f)}</button>
+            `).join('')}
+          </div>
         </div>
-        <div class="field">
-          <label>Answer with</label>
-          <select id="back">${fieldOptions(commonFields, c.back)}</select>
+        <div class="dir-group">
+          <span class="dir-label">Answer</span>
+          <div class="dir-picks">
+            ${commonFields.map(f => `
+              <button class="seg-btn dir-pick ${c.back.includes(f) ? 'on' : ''}"
+                      data-field="${f}" data-side="back">${fieldName(f)}</button>
+            `).join('')}
+          </div>
         </div>
-        <label class="check">
+        <label class="check" style="margin-top:10px">
           <input type="checkbox" id="mixed" ${c.mixed ? "checked" : ""}>
           <span>Swap direction randomly each card</span>
         </label>
@@ -202,7 +215,7 @@ function wireSetup(commonFields) {
 
     row.querySelector(".deck-on").addEventListener("change", (e) => {
       dc.enabled = e.target.checked;
-      renderSetup(); // direction options depend on which decks are on
+      renderSetup();
     });
     row.querySelector(".from").addEventListener("change", (e) => {
       dc.min = clampInt(e.target.value, 1, max);
@@ -222,10 +235,23 @@ function wireSetup(commonFields) {
     });
   });
 
-  const front = app.querySelector("#front");
-  const back = app.querySelector("#back");
-  if (front) front.addEventListener("change", (e) => (c.front = e.target.value));
-  if (back) back.addEventListener("change", (e) => (c.back = e.target.value));
+  // Direction toggles: each button adds/removes its field from front[] or back[]
+  app.querySelectorAll(".dir-pick").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const field = btn.dataset.field;
+      const side = btn.dataset.side; // "front" or "back"
+      const arr = c[side];
+      const idx = arr.indexOf(field);
+      if (idx === -1) {
+        arr.push(field);
+      } else if (arr.length > 1) {
+        arr.splice(idx, 1);
+      }
+      ensureDirectionValid(c, commonFields);
+      renderSetup();
+    });
+  });
+
   const mixed = app.querySelector("#mixed");
   if (mixed) mixed.addEventListener("change", (e) => (c.mixed = e.target.checked));
 
@@ -264,14 +290,12 @@ function startSession() {
     perDeck: {},
     lastKey: null,
     card: null,
-    phase: "prompt", // prompt -> reveal -> graded
+    phase: "prompt",
   };
   nextCard();
   go("study");
 }
 
-// Build the candidate pool: every in-range, enabled card with freq > 0,
-// carrying its current memory record.
 function buildPool(c) {
   const pool = [];
   for (const deck of state.decks) {
@@ -285,7 +309,6 @@ function buildPool(c) {
   return pool;
 }
 
-// Weighted pick: deckFrequency × itemWeight, normalized. Avoid immediate repeat.
 async function nextCard() {
   const run = state.run;
   const entries = [];
@@ -296,7 +319,7 @@ async function nextCard() {
       defaultMemory(p.deck.id, p.item.i);
     let w = (p.deckFreq / 100) * (mem.weight / 100);
     const key = `${p.deck.id}:${p.item.i}`;
-    if (key === run.lastKey && run.pool.length > 1) w *= 0.15; // soft anti-repeat
+    if (key === run.lastKey && run.pool.length > 1) w *= 0.15;
     if (w > 0) {
       entries.push({ ...p, mem, key, w });
       total += w;
@@ -316,16 +339,16 @@ async function nextCard() {
     r -= e.w;
   }
 
-  // decide this card's direction
+  // Resolve multi-field direction for this deck: filter to fields that exist here
   const c = run.config;
-  let front = c.front;
-  let back = c.back;
-  if (c.mixed && Math.random() < 0.5) [front, back] = [back, front];
-  // fall back to the deck's own fields if a chosen field is missing
-  if (!chosen.deck.fields.includes(front)) front = chosen.deck.prompt || chosen.deck.fields[0];
-  if (!chosen.deck.fields.includes(back)) back = chosen.deck.answer || chosen.deck.fields[1];
+  let fronts = c.front.filter((f) => chosen.deck.fields.includes(f));
+  if (!fronts.length) fronts = [chosen.deck.prompt || chosen.deck.fields[0]];
+  let backs = c.back.filter((f) => chosen.deck.fields.includes(f));
+  if (!backs.length) backs = [chosen.deck.answer || chosen.deck.fields[1]];
 
-  run.card = { ...chosen, front, back };
+  if (c.mixed && Math.random() < 0.5) [fronts, backs] = [backs, fronts];
+
+  run.card = { ...chosen, front: fronts, back: backs };
   run.phase = "prompt";
   renderStudy();
 }
@@ -355,7 +378,6 @@ async function grade(correct) {
   renderStudy();
 }
 
-// Update BOTH layers in one record.
 function applyResult(mem, correct) {
   const now = Date.now();
   mem.seen += 1;
@@ -364,7 +386,6 @@ function applyResult(mem, correct) {
     mem.correct += 1;
     mem.streak += 1;
     mem.weight = clamp(mem.weight - NUDGE, MIN_WEIGHT, MAX_WEIGHT);
-    // SM-2-ish schedule (kept for a future automatic mode)
     if (mem.intervalDays === 0) mem.intervalDays = 1;
     else if (mem.intervalDays === 1) mem.intervalDays = 6;
     else mem.intervalDays = Math.round(mem.intervalDays * mem.ease);
@@ -378,7 +399,6 @@ function applyResult(mem, correct) {
   mem.dueAt = now + mem.intervalDays * 86400000;
 }
 
-// Manual fine-tune from the feedback step.
 async function nudge(dir) {
   const run = state.run;
   if (!run.card) return;
@@ -414,14 +434,12 @@ function renderStudy() {
   const target = run.config.length;
   const progress =
     target > 0 ? `${run.answered}/${target}` : `${run.answered}`;
-  const promptText = displayField(card.item, card.front);
-  const answerText = displayField(card.item, card.back);
 
   let body = "";
   if (run.phase === "prompt") {
-    body = promptBody(run, card, promptText);
+    body = promptBody(run, card);
   } else if (run.phase === "graded") {
-    body = feedbackBody(run, card, promptText, answerText);
+    body = feedbackBody(run, card);
   }
 
   app.innerHTML = `
@@ -437,64 +455,65 @@ function renderStudy() {
   else wireFeedback();
 }
 
-function promptBody(run, card, promptText) {
-  const big = promptClass(card.front);
+function promptBody(run, card) {
   const mode = run.config.mode;
+  const frontHtml = renderFieldsHtml(card.item, card.front, "prompt");
+  const primaryBack = card.back[0];
 
   if (mode === "quick") {
     return `
-      <div class="card"><div class="prompt ${big}">${escapeHtml(promptText)}</div>
-        <div class="dir">${dirLabel(card)}</div></div>
+      <div class="card">
+        ${frontHtml}
+        <div class="dir">${dirLabel(card)}</div>
+      </div>
       <div class="actions" id="quick-reveal">
         <button class="btn primary big" id="reveal">Show answer</button>
       </div>`;
   }
 
-  // explicit mode
-  if (isScriptField(card.back)) {
-    // tap the right character
+  // explicit mode — only back[0] drives the input
+  if (isScriptField(primaryBack)) {
     const opts = choiceOptions(card);
     return `
-      <div class="card"><div class="prompt ${big}">${escapeHtml(promptText)}</div>
-        <div class="dir">${dirLabel(card)}</div></div>
+      <div class="card">
+        ${frontHtml}
+        <div class="dir">${dirLabel(card)}</div>
+      </div>
       <div class="choices">
         ${opts
           .map(
             (o) =>
-              `<button class="choice" data-val="${escapeAttr(o)}">${escapeHtml(
-                o
-              )}</button>`
+              `<button class="choice" data-val="${escapeAttr(o)}">${escapeHtml(o)}</button>`
           )
           .join("")}
       </div>`;
   }
 
-  // type the answer
   return `
-    <div class="card"><div class="prompt ${big}">${escapeHtml(promptText)}</div>
-      <div class="dir">${dirLabel(card)}</div></div>
+    <div class="card">
+      ${frontHtml}
+      <div class="dir">${dirLabel(card)}</div>
+    </div>
     <div class="answer-input">
       <input type="text" id="typed" autocapitalize="off" autocomplete="off"
-        autocorrect="off" spellcheck="false" placeholder="Type ${escapeAttr(
-          card.back
-        )}…" />
+        autocorrect="off" spellcheck="false" placeholder="Type ${escapeAttr(fieldName(primaryBack))}…" />
       <button class="btn primary" id="check">Check</button>
     </div>`;
 }
 
-function feedbackBody(run, card, promptText, answerText) {
+function feedbackBody(run, card) {
   const ok = run.lastCorrect;
   const mark = ok ? "○" : "×";
-  const big = promptClass(card.front);
-  const ans = promptClass(card.back) + " small";
+  const frontHtml = renderFieldsHtml(card.item, card.front, "prompt");
+  const backHtml = renderFieldsHtml(card.item, card.back, "answer");
   const noteHtml = card.item.note
     ? `<div class="card-note">${escapeHtml(card.item.note)}</div>`
     : "";
   return `
     <div class="card ${ok ? "right" : "wrong"}">
       <div class="mark ${ok ? "maru" : "batsu"}">${mark}</div>
-      <div class="prompt ${big}">${escapeHtml(promptText)}</div>
-      <div class="reveal-answer ${ans}">${escapeHtml(answerText)}</div>
+      ${frontHtml}
+      ${backHtml}
       ${
         card.typed != null && !ok
           ? `<div class="your">you wrote: ${escapeHtml(card.typed || "—")}</div>`
@@ -513,20 +532,32 @@ function feedbackBody(run, card, promptText, answerText) {
     </div>`;
 }
 
+// Render multiple fields stacked in a card.
+// mode: "prompt" (shown side) or "answer" (revealed side)
+// First field gets the primary size; subsequent ones get .sub (smaller).
+function renderFieldsHtml(item, fields, mode) {
+  return fields.map((f, idx) => {
+    const text = displayField(item, f);
+    const cls = promptClass(f);
+    const sub = idx > 0 ? " sub" : "";
+    if (mode === "answer") {
+      return `<div class="reveal-answer ${cls}${sub}">${escapeHtml(text)}</div>`;
+    }
+    return `<div class="prompt ${cls}${sub}">${escapeHtml(text)}</div>`;
+  }).join("");
+}
+
 function wirePrompt(run, card) {
   const mode = run.config.mode;
+  const primaryBack = card.back[0];
+
   if (mode === "quick") {
     app.querySelector("#reveal").addEventListener("click", () => {
-      // reveal then show the two self-grade buttons
-      const answerText = displayField(card.item, card.back);
-      const ans = promptClass(card.back) + " small";
+      const backHtml = renderFieldsHtml(card.item, card.back, "answer");
       const noteHtml = card.item.note
         ? `<div class="card-note">${escapeHtml(card.item.note)}</div>`
         : "";
-      app.querySelector(".card").insertAdjacentHTML(
-        "beforeend",
-        `<div class="reveal-answer ${ans}">${escapeHtml(answerText)}</div>${noteHtml}`
-      );
+      app.querySelector(".card").insertAdjacentHTML("beforeend", backHtml + noteHtml);
       app.querySelector("#quick-reveal").innerHTML = `
         <button class="btn knew" data-grade="1">I knew it ○</button>
         <button class="btn missed" data-grade="0">I didn't ×</button>`;
@@ -539,11 +570,11 @@ function wirePrompt(run, card) {
     return;
   }
 
-  if (isScriptField(card.back)) {
+  if (isScriptField(primaryBack)) {
     app.querySelectorAll(".choice").forEach((b) =>
       b.addEventListener("click", () => {
         const picked = b.dataset.val;
-        const correct = answersFor(card.item, card.back).includes(picked);
+        const correct = answersFor(card.item, primaryBack).includes(picked);
         card.typed = picked;
         if (!correct) b.classList.add("bad");
         grade(correct);
@@ -555,7 +586,7 @@ function wirePrompt(run, card) {
   const input = app.querySelector("#typed");
   const submit = () => {
     const val = normalize(input.value);
-    const accepted = answersFor(card.item, card.back).map(normalize);
+    const accepted = answersFor(card.item, primaryBack).map(normalize);
     card.typed = input.value.trim();
     grade(accepted.includes(val) && val !== "");
   };
@@ -708,12 +739,148 @@ function renderData() {
   });
 }
 
+// ---------- browse & read ----------
+async function renderBrowse() {
+  const b = state.browse;
+
+  // Load all memory in one round-trip
+  const allMem = await Memory.getAll();
+  const memMap = {};
+  for (const r of allMem) memMap[r.key] = r;
+
+  // Build flat list of all items across all decks
+  const allItems = [];
+  for (const deck of state.decks) {
+    for (const item of deck.items) {
+      const key = `${deck.id}:${item.i}`;
+      allItems.push({ deck, item, mem: memMap[key] || defaultMemory(deck.id, item.i) });
+    }
+  }
+
+  // Apply deck + search filters
+  const query = b.query.toLowerCase().trim();
+  const filtered = allItems.filter(({ deck, item }) => {
+    if (b.deckId !== "all" && deck.id !== b.deckId) return false;
+    if (!query) return true;
+    return deck.fields.some((f) => {
+      const v = item[f];
+      if (v == null) return false;
+      const s = Array.isArray(v) ? v.join(" ") : String(v);
+      return s.toLowerCase().includes(query);
+    });
+  });
+
+  const deckChips = [{ id: "all", title: "All" }, ...state.decks]
+    .map(
+      (d) =>
+        `<button class="chip ${b.deckId === d.id ? "on" : ""}" data-deck-filter="${d.id}">${escapeHtml(d.title)}</button>`
+    )
+    .join("");
+
+  app.innerHTML = `
+    <header class="topbar">
+      <button class="btn ghost back" data-go="home">‹ Back</button>
+      <h1>Browse &amp; read</h1>
+      <button class="btn ghost${b.editMode ? " edit-active" : ""}" id="toggle-edit">${b.editMode ? "Done" : "Edit"}</button>
+    </header>
+    <main class="stack">
+      <div class="browse-filters">
+        <input type="search" id="browse-search" class="browse-search"
+          placeholder="Search…" value="${escapeAttr(b.query)}" />
+        <div class="chip-row">${deckChips}</div>
+      </div>
+      <div class="browse-count">${filtered.length} item${filtered.length !== 1 ? "s" : ""}</div>
+      <div class="browse-list">
+        ${filtered.map((entry) => browseItemHtml(entry, b.editMode)).join("")}
+      </div>
+    </main>`;
+
+  wireGo();
+  wireBrowse();
+}
+
+function browseItemHtml({ deck, item, mem }, editMode) {
+  const fields = deck.fields;
+  const mainField = deck.prompt || fields[0];
+  const mainVal = displayField(item, mainField);
+  const mainCls = promptClass(mainField);
+
+  // All other fields joined as a readable line
+  const restParts = fields
+    .filter((f) => f !== mainField)
+    .map((f) => displayField(item, f))
+    .filter(Boolean);
+  const restHtml = restParts.length
+    ? `<span class="browse-rest">${escapeHtml(restParts.join("  ·  "))}</span>`
+    : "";
+
+  const noteHtml = item.note
+    ? `<details class="browse-note"><summary>Note</summary><span>${escapeHtml(item.note)}</span></details>`
+    : "";
+
+  const sideHtml = editMode
+    ? `<div class="browse-weight">
+        <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="-1">−</button>
+        <span class="weight-badge" data-key="${deck.id}:${item.i}">${mem.weight}</span>
+        <button class="tune-btn" data-item-key="${deck.id}:${item.i}" data-nudge="1">+</button>
+      </div>`
+    : `<span class="browse-deck-tag">${escapeHtml(deck.title)}</span>`;
+
+  return `
+    <div class="browse-item">
+      <div class="browse-main">
+        <span class="browse-glyph ${mainCls}">${escapeHtml(mainVal)}</span>
+        <div class="browse-info">${restHtml}</div>
+        ${sideHtml}
+      </div>
+      ${noteHtml}
+    </div>`;
+}
+
+function wireBrowse() {
+  const b = state.browse;
+
+  app.querySelector("#browse-search").addEventListener("input", async (e) => {
+    b.query = e.target.value;
+    await renderBrowse();
+    // Re-focus the search input after re-render and restore cursor to end
+    const s = app.querySelector("#browse-search");
+    if (s) { s.focus(); s.setSelectionRange(s.value.length, s.value.length); }
+  });
+
+  app.querySelectorAll("[data-deck-filter]").forEach((chip) =>
+    chip.addEventListener("click", () => {
+      b.deckId = chip.dataset.deckFilter;
+      renderBrowse();
+    })
+  );
+
+  app.querySelector("#toggle-edit").addEventListener("click", () => {
+    b.editMode = !b.editMode;
+    renderBrowse();
+  });
+
+  // Weight nudge in edit mode (update in place, no full re-render)
+  app.querySelectorAll("[data-item-key][data-nudge]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const key = btn.dataset.itemKey;
+      const [deckId, iStr] = key.split(":");
+      const i = Number(iStr);
+      const mem = (await Memory.get(deckId, i)) || defaultMemory(deckId, i);
+      mem.weight = clamp(mem.weight + Number(btn.dataset.nudge) * NUDGE, MIN_WEIGHT, MAX_WEIGHT);
+      await Memory.put(mem);
+      const badge = app.querySelector(`.weight-badge[data-key="${key}"]`);
+      if (badge) badge.textContent = mem.weight;
+    });
+  });
+}
+
 // ---------- helpers ----------
 function defaultConfig() {
   const decks = {};
   state.decks.forEach((d, idx) => {
     decks[d.id] = {
-      enabled: idx === 0, // first deck on by default
+      enabled: idx === 0,
       min: 1,
       max: d.items.length,
       freq: 60,
@@ -722,8 +889,8 @@ function defaultConfig() {
   const first = state.decks[0];
   return {
     decks,
-    front: first.prompt || first.fields[0],
-    back: first.answer || first.fields[1],
+    front: [first.prompt || first.fields[0]],
+    back: [first.answer || first.fields[1]],
     mixed: false,
     mode: "quick",
     length: 20,
@@ -740,16 +907,24 @@ function intersectFields(decks) {
 }
 
 function ensureDirectionValid(c, fields) {
-  if (!fields.includes(c.front)) c.front = fields[0];
-  if (!fields.includes(c.back) || c.back === c.front)
-    c.back = fields.find((f) => f !== c.front) || fields[0];
+  // Filter each side to only include fields available in the common set
+  c.front = c.front.filter((f) => fields.includes(f));
+  if (!c.front.length) c.front = [fields[0]];
+
+  // Back must not duplicate all of front (keep fields not in front)
+  c.back = c.back.filter((f) => fields.includes(f) && !c.front.includes(f));
+  if (!c.back.length) {
+    const remaining = fields.find((f) => !c.front.includes(f));
+    c.back = [remaining || fields[0]];
+  }
 }
 
 function choiceOptions(card) {
-  const correct = answersFor(card.item, card.back)[0];
+  const primaryBack = card.back[0];
+  const correct = answersFor(card.item, primaryBack)[0];
   const others = card.deck.items
     .filter((it) => it.i !== card.item.i)
-    .map((it) => answersFor(it, card.back)[0])
+    .map((it) => answersFor(it, primaryBack)[0])
     .filter((v) => v && v !== correct);
   shuffle(others);
   const opts = [correct, ...others.slice(0, 3)];
@@ -769,20 +944,13 @@ function promptClass(field) {
 }
 
 function dirLabel(card) {
-  return `${fieldName(card.front)} → ${fieldName(card.back)}`;
+  const f = card.front.map(fieldName).join(" + ");
+  const b = card.back.map(fieldName).join(" + ");
+  return `${f} → ${b}`;
 }
+
 function fieldName(f) {
   return { char: "character", script: "kanji", kana: "kana", romaji: "romaji", english: "English" }[f] || f;
-}
-function fieldOptions(fields, sel) {
-  return fields
-    .map(
-      (f) =>
-        `<option value="${f}" ${f === sel ? "selected" : ""}>${fieldName(
-          f
-        )}</option>`
-    )
-    .join("");
 }
 
 function normalize(s) {
@@ -811,9 +979,7 @@ function wireGo() {
   );
 }
 function errorView(title, msg) {
-  return `<header class="topbar"><h1>${escapeHtml(
-    title
-  )}</h1></header><main class="stack"><p class="lede">${msg}</p></main>`;
+  return `<header class="topbar"><h1>${escapeHtml(title)}</h1></header><main class="stack"><p class="lede">${msg}</p></main>`;
 }
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({
