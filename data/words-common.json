@@ -1,0 +1,28 @@
+{
+  "id": "words-common",
+  "title": "Common Words",
+  "type": "vocab",
+  "fields": ["script", "kana", "romaji", "english"],
+  "prompt": "script",
+  "answer": "english",
+  "items": [
+    { "i": 1,  "script": "水",   "kana": "みず",     "romaji": ["mizu"],     "english": ["water"] },
+    { "i": 2,  "script": "火",   "kana": "ひ",       "romaji": ["hi"],       "english": ["fire"] },
+    { "i": 3,  "script": "山",   "kana": "やま",     "romaji": ["yama"],     "english": ["mountain"] },
+    { "i": 4,  "script": "川",   "kana": "かわ",     "romaji": ["kawa"],     "english": ["river"] },
+    { "i": 5,  "script": "人",   "kana": "ひと",     "romaji": ["hito"],     "english": ["person"] },
+    { "i": 6,  "script": "日",   "kana": "ひ",       "romaji": ["hi"],       "english": ["day", "sun"] },
+    { "i": 7,  "script": "月",   "kana": "つき",     "romaji": ["tsuki"],    "english": ["moon", "month"] },
+    { "i": 8,  "script": "木",   "kana": "き",       "romaji": ["ki"],       "english": ["tree", "wood"] },
+    { "i": 9,  "script": "本",   "kana": "ほん",     "romaji": ["hon"],      "english": ["book"] },
+    { "i": 10, "script": "車",   "kana": "くるま",   "romaji": ["kuruma"],   "english": ["car"] },
+    { "i": 11, "script": "家",   "kana": "いえ",     "romaji": ["ie"],       "english": ["house", "home"] },
+    { "i": 12, "script": "学校", "kana": "がっこう", "romaji": ["gakkou"],   "english": ["school"] },
+    { "i": 13, "script": "先生", "kana": "せんせい", "romaji": ["sensei"],   "english": ["teacher"] },
+    { "i": 14, "script": "友達", "kana": "ともだち", "romaji": ["tomodachi"],"english": ["friend"] },
+    { "i": 15, "script": "食べる","kana": "たべる",   "romaji": ["taberu"],   "english": ["to eat"] },
+    { "i": 16, "script": "飲む", "kana": "のむ",     "romaji": ["nomu"],     "english": ["to drink"] },
+    { "i": 17, "script": "行く", "kana": "いく",     "romaji": ["iku"],      "english": ["to go"] },
+    { "i": 18, "script": "見る", "kana": "みる",     "romaji": ["miru"],     "english": ["to see", "to watch"] }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "decks": [
+    "hiragana.json",
+    "katakana.json",
+    "words-n5.json",
+    "verbs-n5.json"
+  ]
+}
