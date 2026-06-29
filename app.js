@@ -438,7 +438,7 @@ function renderStudy() {
 }
 
 function promptBody(run, card, promptText) {
-  const big = isScriptField(card.front) ? "glyph" : "word";
+  const big = promptClass(card.front);
   const mode = run.config.mode;
 
   if (mode === "quick") {
@@ -485,8 +485,11 @@ function promptBody(run, card, promptText) {
 function feedbackBody(run, card, promptText, answerText) {
   const ok = run.lastCorrect;
   const mark = ok ? "○" : "×";
-  const big = isScriptField(card.front) ? "glyph" : "word";
-  const ans = isScriptField(card.back) ? "glyph small" : "word small";
+  const big = promptClass(card.front);
+  const ans = promptClass(card.back) + " small";
+  const noteHtml = card.item.note
+    ? `<div class="card-note">${escapeHtml(card.item.note)}</div>`
+    : "";
   return `
     <div class="card ${ok ? "right" : "wrong"}">
       <div class="mark ${ok ? "maru" : "batsu"}">${mark}</div>
@@ -497,6 +500,7 @@ function feedbackBody(run, card, promptText, answerText) {
           ? `<div class="your">you wrote: ${escapeHtml(card.typed || "—")}</div>`
           : ""
       }
+      ${noteHtml}
     </div>
     <div class="tune">
       <span>appears</span>
@@ -515,10 +519,13 @@ function wirePrompt(run, card) {
     app.querySelector("#reveal").addEventListener("click", () => {
       // reveal then show the two self-grade buttons
       const answerText = displayField(card.item, card.back);
-      const ans = isScriptField(card.back) ? "glyph small" : "word small";
+      const ans = promptClass(card.back) + " small";
+      const noteHtml = card.item.note
+        ? `<div class="card-note">${escapeHtml(card.item.note)}</div>`
+        : "";
       app.querySelector(".card").insertAdjacentHTML(
         "beforeend",
-        `<div class="reveal-answer ${ans}">${escapeHtml(answerText)}</div>`
+        `<div class="reveal-answer ${ans}">${escapeHtml(answerText)}</div>${noteHtml}`
       );
       app.querySelector("#quick-reveal").innerHTML = `
         <button class="btn knew" data-grade="1">I knew it ○</button>
@@ -751,7 +758,14 @@ function choiceOptions(card) {
 
 function displayField(item, field) {
   const v = item[field];
-  return Array.isArray(v) ? v[0] : v == null ? "" : String(v);
+  if (v == null) return "";
+  return Array.isArray(v) ? v.join(" / ") : String(v);
+}
+
+function promptClass(field) {
+  if (isScriptField(field)) return "glyph";
+  if (field === "english") return "en";
+  return "word";
 }
 
 function dirLabel(card) {

@@ -383,6 +383,11 @@ input[type="range"] {
   font-size: clamp(2.4rem, 12vw, 3.6rem);
   font-weight: 600;
 }
+.prompt.en {
+  font-family: var(--sans);
+  font-size: clamp(1.6rem, 8vw, 2.4rem);
+  font-weight: 600;
+}
 .dir {
   color: var(--muted);
   font-size: 0.78rem;
@@ -403,6 +408,20 @@ input[type="range"] {
 .reveal-answer.small {
   font-size: 1.8rem;
   font-weight: 600;
+}
+.reveal-answer.en {
+  font-family: var(--sans);
+}
+.card-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: left;
+  width: 100%;
+  line-height: 1.55;
 }
 .your {
   color: var(--shu);
