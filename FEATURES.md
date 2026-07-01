@@ -46,6 +46,8 @@ Never leave this file out of sync with the actual code.
 | `/data/time-calendar.json` | 26 items: days of the week (with planet etymology), all 12 months (with cultural events + irregular readings), seasons, time expressions |
 | `/data/weather-seasons.json` | 23 items: 4 seasons + 梅雨 (rainy season), weather words, the 暑い/熱い and 寒い/冷たい distinctions, temperature vocabulary |
 | `/data/countries.json` | 9 items: Japan/日本語/日本人, England(イギリス)/英語/イギリス人, France(フランス)/フランス語/フランス人 |
+| `/data/phrases-tourist.json` | 15 tourist conversation phrases: duration of stay, recommendations (food/restaurant/sightseeing/activities), reservations, English menu, table availability, opening hours, directions, walking distance, solo travel, taking a photo |
+| `/data/phrases-social.json` | 18 social scripts: いらっしゃいませ, 何名様ですか, こちらへどうぞ, いただきます, ごちそうさまでした, お会計, カードは使えますか, 現金のみ, 袋はよろしいですか, ポイントカード, 温めますか, お箸でよろしいですか, 乾杯, またどうぞ, お待たせしました, よろしくお願いします, すみません |
 | `/stories/index.json` | Manifest for story files (separate from deck flashcard system) |
 | `/stories/01-nicolas-tokyo.json` | Story 1: Nicolas Arrives in Tokyo (9 paragraphs, 初級) |
 | `/stories/02-restaurant.json` | Story 2: Dinner at a Sushi Restaurant (8 paragraphs, 初級) |

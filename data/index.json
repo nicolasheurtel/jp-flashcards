@@ -12,6 +12,8 @@
     "grammar-n3.json",
     "time-calendar.json",
     "weather-seasons.json",
-    "countries.json"
+    "countries.json",
+    "phrases-tourist.json",
+    "phrases-social.json"
   ]
 }
